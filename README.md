@@ -172,12 +172,17 @@ Provides comprehensive evaluation metrics:
 
 ## Experimental Results
 
-Based on the evaluation results in the project, performance of different data processing methods:
-
-- **Sheet1-4**: Good performance with accuracy above 0.8
-- **Sheet5-6**: Medium performance with accuracy between 0.6-0.8
-- **Sheet7**: Poor performance with accuracy around 0.58, mainly due to severe information loss from initials abbreviation
-- **Sheet8**: Simulated data with no real matches
+| Test      | Total number of mapping results | Actual matching number | Accuracy | Precision | Recall | F1     |
+|-----------|---------------------------------|------------------------|----------|-----------|--------|--------|
+| test_01   | 16032                           | 15185                  | 0.9472   | 1         | 0.9472 | 0.9729 |
+| sheet1    | 1000                            | 997                    | 0.997    | 0.997     | 1      | 0.9985 |
+| sheet2    | 975                             | 957                    | 0.7231   | 0.9831    | 0.7304 | 0.8381 |
+| sheet3    | 1000                            | 995                    | 0.995    | 0.995     | 1      | 0.9975 |
+| sheet4    | 980                             | 967                    | 0.7245   | 0.9874    | 0.7301 | 0.8395 |
+| sheet5    | 967                             | 915                    | 0.7622   | 0.9647    | 0.777  | 0.8608 |
+| sheet6    | 964                             | 943                    | 0.8133   | 0.9848    | 0.8218 | 0.896  |
+| sheet7    | 707                             | 648                    | 0.5813   | 0.9706    | 0.5602 | 0.7104 |
+| sheet8    | 0                               | 0                      | -        | -         | -      | -      |
 
 ## Configuration Parameters
 
