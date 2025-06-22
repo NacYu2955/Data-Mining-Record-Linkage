@@ -1,224 +1,220 @@
-# 数据挖掘项目：姓名匹配与去重系统
+# Data Mining Record Linkage
 
-## 项目概述
+## Project Overview
 
-这是一个基于深度学习和传统算法的姓名匹配与去重系统，主要用于处理大规模姓名数据集的相似度计算、去重和映射任务。项目支持多种数据处理方式，包括Jaccard n-gram相似度和BERT语义相似度。
+This is a name matching and deduplication system based on deep learning and traditional algorithms, primarily used for similarity calculation, deduplication, and mapping tasks on large-scale name datasets. The project supports multiple data processing methods, including Jaccard n-gram similarity and BERT semantic similarity.
 
-## 功能特性
+## Features
 
-- **多模式相似度计算**：支持Jaccard n-gram和BERT语义相似度
-- **GPU加速处理**：利用PyTorch和CUDA进行大规模数据加速处理
-- **智能数据预处理**：包含多种文本标准化和清洗功能
-- **分块算法**：使用FAISS进行高效的数据分块和索引
-- **批量处理**：支持大规模数据的分批处理
-- **综合评估指标**：提供准确率、精确率、召回率、F1分数等评估指标
+- **Multi-mode Similarity Calculation**: Supports Jaccard n-gram and BERT semantic similarity
+- **GPU Accelerated Processing**: Utilizes PyTorch and CUDA for large-scale data acceleration
+- **Intelligent Data Preprocessing**: Includes various text standardization and cleaning functions
+- **Blocking Algorithm**: Uses FAISS for efficient data blocking and indexing
+- **Batch Processing**: Supports batch processing of large-scale data
+- **Comprehensive Evaluation Metrics**: Provides accuracy, precision, recall, F1-score and other evaluation metrics
 
-## 项目结构
+## Project Structure
 
 ```
-HW1/
-├── main.py                 # 主程序入口
-├── preprocessing.py        # 数据预处理模块
-├── similarity.py          # 相似度计算模块
-├── blocking.py            # 分块算法模块
-├── evaluation.py          # 评估指标计算模块
-├── model.py               # 模型定义
-├── requirements.txt       # 依赖包列表
-├── data/                  # 数据文件夹
-│   ├── primary.csv        # 主要数据集
-│   ├── alternate.csv      # 备用数据集
-│   ├── sheet1-8.csv       # 测试数据集（8种不同处理方式）
-│   ├── mappings_*.csv     # 映射结果文件
-│   └── duplicates.csv     # 去重结果文件
-├── bert-base-uncased/     # BERT预训练模型
-└── __pycache__/          # Python缓存文件
+/
+├── main.py                 # Main program entry
+├── preprocessing.py        # Data preprocessing module
+├── similarity.py           # Similarity calculation module
+├── blocking.py             # Blocking algorithm module
+├── evaluation.py           # Evaluation metrics calculation module
+├── model.py                # Model definition
+├── requirements.txt        # Dependency package list
+├── data/                   # Data folder
+│   ├── primary.csv         # Primary dataset
+│   ├── alternate.csv       # Alternate dataset
+│   ├── sheet1-8.csv        # Test datasets (8 different processing methods)
+│   ├── mappings_*.csv      # Mapping result files
+│   └── duplicates.csv      # Deduplication result files
+├── bert-base-uncased/      # BERT pre-trained model
+└── __pycache__/            # Python cache files
 ```
 
-## 数据处理方式
+## Data Processing Methods
 
-项目支持8种不同的数据处理方式：
+The project supports 8 different data processing methods:
 
-| Sheet | 处理方式 | 描述 |
-|-------|----------|------|
-| Sheet1 | 去除特殊字符和空格 | 标准化文本格式 |
-| Sheet2 | 打乱单词顺序+去除特殊字符 | 测试词序变化的影响 |
-| Sheet3 | 字符间空格分隔 | 模拟OCR识别结果 |
-| Sheet4 | 打乱单词顺序+字符分隔 | 组合处理方式 |
-| Sheet5 | 单词移除 | 模拟数据缺失 |
-| Sheet6 | 单词截断 | 模拟数据截断 |
-| Sheet7 | 首字母缩写 | 信息压缩处理 |
-| Sheet8 | 模拟姓名 | 无真实匹配的测试数据 |
+| Sheet | Processing Method | Description |
+|-------|------------------|-------------|
+| Sheet1 | Remove special characters and spaces | Standardize text format |
+| Sheet2 | Shuffle word order + remove special characters | Test the impact of word order changes |
+| Sheet3 | Space-separated characters | Simulate OCR recognition results |
+| Sheet4 | Shuffle word order + character separation | Combined processing method |
+| Sheet5 | Word removal | Simulate data missing |
+| Sheet6 | Word truncation | Simulate data truncation |
+| Sheet7 | Initials abbreviation | Information compression processing |
+| Sheet8 | Simulated names | Test data without real matches |
 
-## 安装依赖
+## Installation
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 主要依赖包
+### Main Dependencies
 
-- `torch>=1.8.0` - PyTorch深度学习框架
-- `transformers>=4.0.0` - Hugging Face转换器库
-- `pandas>=1.2.0` - 数据处理
-- `numpy>=1.19.2` - 数值计算
-- `scikit-learn>=0.24.0` - 机器学习工具
-- `faiss-cpu>=1.7.0` - 向量索引和搜索
-- `sentence-transformers==2.2.0` - 句子嵌入
-- `spacy==2.3.7` - 自然语言处理
+- `torch>=1.8.0` 
+- `transformers>=4.0.0` 
+- `pandas>=1.2.0` 
+- `numpy>=1.19.2` 
+- `scikit-learn>=0.24.0` 
+- `faiss-cpu>=1.7.0` 
+- `sentence-transformers==2.2.0` 
+- `spacy==2.3.7` 
 
-## BERT模型下载
+## BERT Model Download
 
-项目使用BERT-base-uncased预训练模型。首次运行时会自动下载，也可以手动下载：
+The project uses the BERT-base-uncased pre-trained model. It will be automatically downloaded on first run, or you can download it manually:
 
-### 方法1：自动下载（推荐）
-首次运行程序时会自动下载BERT模型到本地缓存目录。
+### Method 1: Automatic Download (Recommended)
+The BERT model will be automatically downloaded to the local cache directory on first run.
 
-### 方法2：手动下载
+### Method 2: Manual Download
 ```bash
-# 使用Python脚本下载
+# Download using Python script
 python -c "from transformers import BertTokenizer, BertModel; BertTokenizer.from_pretrained('bert-base-uncased'); BertModel.from_pretrained('bert-base-uncased')"
 
-# 或者使用transformers-cli
+# Or use transformers-cli
 transformers-cli download bert-base-uncased
 ```
 
-### 方法3：离线下载
-如果网络环境受限，可以从以下地址手动下载：
-- 模型文件：https://huggingface.co/bert-base-uncased/resolve/main/pytorch_model.bin
-- 配置文件：https://huggingface.co/bert-base-uncased/resolve/main/config.json
-- 词汇表：https://huggingface.co/bert-base-uncased/resolve/main/vocab.txt
+### Method 3: Offline Download
+If network access is restricted, you can manually download from the following addresses:
+- Model file: https://huggingface.co/bert-base-uncased/resolve/main/pytorch_model.bin
+- Config file: https://huggingface.co/bert-base-uncased/resolve/main/config.json
+- Vocabulary: https://huggingface.co/bert-base-uncased/resolve/main/vocab.txt
 
-下载后将文件放置在 `bert-base-uncased/` 目录下。
+Place the downloaded files in the `bert-base-uncased/` directory.
 
-## 使用方法
+## Usage
 
-### 1. 基本运行
+### 1. Basic Run
 
 ```bash
 python main.py
 ```
 
-### 2. 数据预处理测试
+### 2. Data Preprocessing Test
 
 ```bash
 python preprocessing_test.py
 ```
 
-### 3. 批量评估
+### 3. Batch Evaluation
 
 ```bash
 python batch_evaluate.py
 ```
 
-### 4. 单独评估
+### 4. Individual Evaluation
 
 ```bash
 python evaluation.py
 ```
 
-## 核心模块说明
+## Core Modules
 
-### 1. 数据预处理 (preprocessing.py)
+### 1. Data Preprocessing (preprocessing.py)
 
-提供多种文本标准化功能：
-- 特殊字符去除
-- 大小写转换
-- 昵称映射
-- 拼写变体处理
-- 数字和罗马数字标准化
-- 形近字符处理
+Provides various text standardization functions:
+- Special character removal
+- Case conversion
+- Nickname mapping
+- Spelling variant processing
+- Number and Roman numeral standardization
+- Similar character processing
 
-### 2. 相似度计算 (similarity.py)
+### 2. Similarity Calculation (similarity.py)
 
-支持两种相似度计算方法：
-- **BERT语义相似度**：使用预训练BERT模型计算语义相似度
-- **Levenshtein距离**：计算编辑距离相似度
-- **综合相似度**：结合多种方法的加权结果
+Supports two similarity calculation methods:
+- **BERT Semantic Similarity**: Uses pre-trained BERT model to calculate semantic similarity
+- **Levenshtein Distance**: Calculates edit distance similarity
+- **Combined Similarity**: Weighted combination of multiple methods
 
-### 3. 分块算法 (blocking.py)
+### 3. Blocking Algorithm (blocking.py)
 
-使用FAISS进行高效的数据分块：
-- BERT嵌入生成
-- 向量索引构建
-- 聚类分块
-- 相似度搜索
+Uses FAISS for efficient data blocking:
+- BERT embedding generation
+- Vector index construction
+- Clustering blocking
+- Similarity search
 
-### 4. 评估模块 (evaluation.py)
+### 4. Evaluation Module (evaluation.py)
 
-提供全面的评估指标：
-- 准确率 (Accuracy)
-- 精确率 (Precision)
-- 召回率 (Recall)
-- F1分数
-- 混淆矩阵
-- ROC曲线和PR曲线
+Provides comprehensive evaluation metrics:
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- Confusion matrix
+- ROC curve and PR curve
 
-## 性能特点
+## Performance Features
 
-### GPU加速
-- 支持CUDA加速的相似度计算
-- 批量处理减少内存占用
-- 自动内存清理机制
+### GPU Acceleration
+- Supports CUDA-accelerated similarity calculation
+- Batch processing reduces memory usage
+- Automatic memory cleanup mechanism
 
-### 大规模数据处理
-- 分批处理支持超大数据集
-- 分块算法减少计算复杂度
-- 高效的向量索引和搜索
+### Large-scale Data Processing
+- Batch processing supports ultra-large datasets
+- Blocking algorithm reduces computational complexity
+- Efficient vector indexing and search
 
-### 多模式支持
-- Jaccard n-gram模式：适合精确匹配
-- BERT语义模式：适合模糊匹配
-- 可配置的相似度阈值
+### Multi-mode Support
+- Jaccard n-gram mode: Suitable for exact matching
+- BERT semantic mode: Suitable for fuzzy matching
+- Configurable similarity thresholds
 
-## 实验结果
+## Experimental Results
 
-根据项目中的评估结果，不同数据处理方式的性能表现：
+Based on the evaluation results in the project, performance of different data processing methods:
 
-- **Sheet1-4**：表现较好，准确率在0.8以上
-- **Sheet5-6**：中等表现，准确率在0.6-0.8之间
-- **Sheet7**：表现较差，准确率约0.58，主要因为首字母缩写信息损失严重
-- **Sheet8**：模拟数据，无真实匹配
+- **Sheet1-4**: Good performance with accuracy above 0.8
+- **Sheet5-6**: Medium performance with accuracy between 0.6-0.8
+- **Sheet7**: Poor performance with accuracy around 0.58, mainly due to severe information loss from initials abbreviation
+- **Sheet8**: Simulated data with no real matches
 
-## 配置参数
+## Configuration Parameters
 
-主要可配置参数：
+Main configurable parameters:
 
 ```python
-# 相似度阈值
+# Similarity threshold
 similarity_threshold = 0.6
 
-# 批处理大小
+# Batch size
 batch_size = 1000
 
-# n-gram大小
+# n-gram size
 n_gram_size = 3
 
-# 是否使用极端预处理
+# Whether to use extreme preprocessing
 use_extreme_preprocessing = False
 ```
 
-## 注意事项
+## Notes
 
-1. **GPU内存**：处理大规模数据时注意GPU内存使用
-2. **模型下载**：首次运行会自动下载BERT模型
-3. **数据格式**：确保输入数据包含ID和NAME列
-4. **文件路径**：确保数据文件路径正确
+1. **GPU Memory**: Pay attention to GPU memory usage when processing large-scale data
+2. **Model Download**: BERT model will be automatically downloaded on first run
+3. **Data Format**: Ensure input data contains ID and NAME columns
+4. **File Paths**: Ensure data file paths are correct
 
-## 扩展功能
+## Extensions
 
-项目支持以下扩展：
-- 自定义预处理规则
-- 新的相似度算法
-- 不同的分块策略
-- 可视化结果展示
+The project supports the following extensions:
+- Custom preprocessing rules
+- New similarity algorithms
+- Different blocking strategies
+- Visualization of results
 
-## 许可证
 
-本项目仅供学术研究使用。
 
-## 联系方式
 
-如有问题或建议，请联系项目维护者。
 
 
  
